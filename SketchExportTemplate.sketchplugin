@@ -1,0 +1,39 @@
+// (command shift a)
+
+if (selection.count() > 0){
+    for (var i = 0; i < selection.count(); i++) {
+        addExportSizes(selection[i]);
+    }
+
+    [doc showMessage:"Export Options Added"];
+} else {
+    var app = [NSApplication sharedApplication];
+    [app displayDialog:"Nothing selected!" withTitle:"Export Template Plugin"];
+}
+
+function addExportSizes(layer) {
+    var iOSExportData = [{"format": "png", "scale": 0.5, "suffix": ""},
+                         {"format": "png", "scale": 1, "suffix": "@2x"},
+                         {"format": "png", "scale": 1.5, "suffix": "@3x"},
+                         {"format": "png", "scale": 0.5, "suffix": "_mdpi"},
+                         {"format": "png", "scale": 0.75, "suffix": "_hdpi"},
+                         {"format": "png", "scale": 1, "suffix": "_xhdpi"},
+                         {"format": "png", "scale": 1.5, "suffix": "_xxhdpi"}];
+
+    var export_sizes = [[layer exportOptions] exportFormats];
+
+    while ([export_sizes count] > 0) {
+        [[export_sizes firstObject] remove]
+    }
+
+    var newFormats = [];
+
+    for (var i = 0; i < iOSExportData.length; i++) {
+        var size_data = iOSExportData[i];
+        var format = [MSExportFormat formatWithScale:size_data.scale name:size_data.suffix fileFormat:size_data.format]
+        [export_sizes addObject:format];
+    }
+
+    [[doc currentPage] deselectAllLayers];
+    [layer select:true byExpandingSelection:true];
+}
