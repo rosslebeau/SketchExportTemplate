@@ -20,18 +20,18 @@ function addExportSizes(layer) {
                          {"format": "png", "scale": 1, "suffix": "_xhdpi"},
                          {"format": "png", "scale": 1.5, "suffix": "_xxhdpi"}];
 
-    var export_sizes = [[layer exportOptions] exportFormats];
 
-    while ([export_sizes count] > 0) {
-        [[export_sizes firstObject] remove]
+    var export_options = [layer exportOptions];
+
+    while ([[export_options exportFormats] count] > 0) {
+        [[[export_options exportFormats] firstObject] remove];
     }
 
     var newFormats = [];
-
     for (var i = 0; i < iOSExportData.length; i++) {
         var size_data = iOSExportData[i];
         var format = [MSExportFormat formatWithScale:size_data.scale name:size_data.suffix fileFormat:size_data.format]
-        [export_sizes addObject:format];
+        [export_options addExportFormat:format];
     }
 
     [[doc currentPage] deselectAllLayers];
